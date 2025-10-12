@@ -13,7 +13,7 @@
 
 ### 安装方法
 >自行选择合适的方法，推荐方法1
-- 方法1: 下载未签名版本，使用[小白助手](https://github.com/likuai2010/auto-installer)安装
+- 方法1: 下载[未签名版本](https://github.com/ystyle/paimon/releases/latest)，使用[小白助手](https://github.com/likuai2010/auto-installer)安装
 - 方法2: 下载项目自行编译安装
 
 ### 实现原理
