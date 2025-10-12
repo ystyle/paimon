@@ -1,0 +1,20 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "米哈游云游戏启动器"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "进不去，怎么想都进不去吧"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "咦？这里怎么有只白色漂浮灵"
+    },
+    {
+      "name": "reason",
+      "value": "连接网络"
+    }
+  ]
+}

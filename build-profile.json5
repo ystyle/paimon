@@ -1,0 +1,55 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\lxy52\\.ohos\\config\\default_paimon_xDXGPx6ytsXQMx4kYh5oz4Qa6eVqjitWwSRsMyBnelk=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B11784D768412BF059B2279A4B2E0EE8FE881F69DF07EEC838B213A47BF68A872F0A3AAD8AA00FA",
+          "profile": "C:\\Users\\lxy52\\.ohos\\config\\default_paimon_xDXGPx6ytsXQMx4kYh5oz4Qa6eVqjitWwSRsMyBnelk=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\lxy52\\.ohos\\config\\default_paimon_xDXGPx6ytsXQMx4kYh5oz4Qa6eVqjitWwSRsMyBnelk=.p12",
+          "storePassword": "0000001BA67369396C4FDBD2CC8AA681D7B4EE79150AA513466DF5CE6EB70191586D705B5F36E76C272685"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.5(17)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
