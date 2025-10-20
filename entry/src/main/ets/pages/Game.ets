@@ -5,99 +5,151 @@ import router from '@ohos.router';
 import { UserAgent } from '../common'
 import { Game } from '../model/model';
 
-const ANIMATION_TIME: number = 1000
-const ANIMATION_PROGRESS: number = -600
+const ANIMATION_TIME: number = 300
 
 @Entry
 @Component
 struct GamePage {
-  // PageTransition
-  @State topY: number = 0
-  @State zoom: number = 0
-  @State angle: number = 1
-  @State leftX: number = 0
-  @State rightX: number = 0
-  @State bottomY: number = 0
-  @State progress: number = 0
-  @State animationType: number = 0
-  @State transitionType: SlideEffect = SlideEffect.Left
+  // 页面状态
+  @State isLoading: boolean = true
+  @State hasError: boolean = false
+  @State errorMessage: string = ''
   @State tipsindex: number = 0
-  // data
   @State game: Game = {} as Game
+  @State loadTimer: number = 0
+  @State webViewReady: boolean = false
+
+  // 动画状态
+  @State transitionType: SlideEffect = SlideEffect.Top
+
   controller: webview.WebviewController = new webview.WebviewController()
   context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext
 
   pageTransition() {
-    // Entry animation
-    PageTransitionEnter({ duration: ANIMATION_TIME, curve: Curve.Linear })
+    // 快速滑入动画
+    PageTransitionEnter({ duration: ANIMATION_TIME, curve: Curve.EaseInOut })
       .slide(this.transitionType)
-      .onEnter((type: RouteType, progress: number) => {
-        this.topY = (-progress + 1) * this.topY
-        this.bottomY = (-progress + 1) * this.bottomY
-        this.leftX = (-progress + 1) * this.leftX
-        this.rightX = (-progress + 1) * this.rightX
-        this.progress = progress
-      })
 
-    // Exit animation
-    PageTransitionExit({ duration: ANIMATION_TIME, curve: Curve.Ease })
+    // 快速滑出动画
+    PageTransitionExit({ duration: ANIMATION_TIME, curve: Curve.EaseInOut })
       .slide(this.transitionType)
-      .onExit((type: RouteType, progress: number) => {
-        this.topY = -ANIMATION_PROGRESS * progress
-        this.bottomY = ANIMATION_PROGRESS * progress
-        this.leftX = -ANIMATION_PROGRESS * progress
-        this.rightX = ANIMATION_PROGRESS * progress
-        this.progress = progress
-      })
   }
 
   onPageShow() {
-    let index = Math.random() * 100 % this.game.tips.length
-    this.tipsindex = Number(index.toFixed(0))
+    if (this.game.tips && this.game.tips.length > 0) {
+      let index = Math.random() * 100 % this.game.tips.length
+      this.tipsindex = Number(index.toFixed(0))
+    }
+
+    // 设置超时机制
+    this.loadTimer = setTimeout(() => {
+      if (this.isLoading) {
+        console.log('WebView加载超时，自动显示内容')
+        this.isLoading = false
+        this.webViewReady = true
+      }
+    }, 10000) // 10秒超时
+  }
+
+  aboutToDisappear() {
+    // 清理定时器
+    if (this.loadTimer) {
+      clearTimeout(this.loadTimer)
+    }
   }
 
   aboutToAppear() {
-    let params = router.getParams() as Record<string, string | number | SlideEffect | Game>;
+    const params = router.getParams() as Record<string, string | number | SlideEffect | Game>;
     this.transitionType = params.type as SlideEffect;
-    this.angle = params.angle as number;
-    this.zoom = params.zoom as number;
-    this.animationType = params.animationType as number;
-    this.game = params.data as Game
+    this.game = params.data as Game;
 
     window.getLastWindow(this.context, (err, current) => {
       current.setWindowSystemBarEnable([])
       current.setWindowLayoutFullScreen(true)
     })
 
-    router.showAlertBeforeBackPage({
-      message: this.game.nickname + ', ' + this.game.tips[this.tipsindex] // 设置询问框的内容
-    })
+    if (this.game.nickname && this.game.tips && this.game.tips.length > 0) {
+      router.showAlertBeforeBackPage({
+        message: this.game.nickname + ', ' + this.game.tips[this.tipsindex]
+      })
+    }
+
+    console.log('游戏页面初始化完成:', this.game.name, this.game.url)
   }
 
   build() {
-    Row() {
-      Column() {
-        Web({ src: this.game.url, controller: this.controller })
-          .fileAccess(true)
-          .javaScriptAccess(true)
-          .domStorageAccess(true)
-          .databaseAccess(true)
-          .pinchSmooth(true)
-          .backgroundColor(0xFFFFFF)
-          .userAgent(UserAgent)
+    Stack() {
+      if (this.hasError) {
+        // 错误状态
+        Column() {
+          Text('加载失败')
+            .fontSize(20)
+            .fontWeight(FontWeight.Bold)
+            .margin({ bottom: 10 })
+          Text(this.errorMessage)
+            .fontSize(14)
+            .textAlign(TextAlign.Center)
+            .margin({ bottom: 20 })
+          Button('重试')
+            .onClick(() => {
+              this.hasError = false
+              this.isLoading = true
+              this.controller.refresh()
+            })
+        }
+        .width('100%')
+        .height('100%')
+        .justifyContent(FlexAlign.Center)
+        .backgroundColor(0xF5F5F5)
+        .padding(20)
+      } else {
+        // 游戏内容 - 始终显示WebView
+        Row() {
+          Column() {
+            Web({ src: this.game.url, controller: this.controller })
+              .fileAccess(true)
+              .javaScriptAccess(true)
+              .domStorageAccess(true)
+              .databaseAccess(true)
+              .mixedMode(MixedMode.All)
+              .onlineImageAccess(true)
+              .zoomAccess(true)
+              .pinchSmooth(true)
+              .backgroundColor(0xFFFFFF)
+              .userAgent(UserAgent)
+              .onPageBegin(() => {
+                console.log('页面开始加载:', this.game.url)
+                this.isLoading = false
+                this.hasError = false
+                this.webViewReady = true
+
+                // 清理超时定时器
+                if (this.loadTimer) {
+                  clearTimeout(this.loadTimer)
+                  this.loadTimer = 0
+                }
+              })
+              .onPageEnd(() => {
+                console.log('页面加载完成:', this.game.url)
+                this.isLoading = false
+                this.webViewReady = true
+              })
+              .onHttpErrorReceive((event) => {
+                console.error('HTTP错误:', event.response.getResponseCode(), event.response.getReasonMessage())
+                if (!this.webViewReady) {
+                  this.hasError = true
+                  this.errorMessage = '页面加载失败，请检查网络连接'
+                }
+              })
+          }
+          .width('100%')
+          .height('100%')
+        }
+        .height('100%')
+        .backgroundColor(0xFFFFFF)
       }
-      // .opacity(this.progress)
-      .rotate(this.animationType === 3 ? { z: 1, angle: this.progress * this.angle } : { z: 1, angle: 0 })
-      .scale(this.animationType === 2 ? {
-        x: this.progress * this.zoom / 2,
-        y: this.progress * this.zoom / 2,
-        centerY: '50%',
-        centerX: '50%'
-      } : { x: 1, y: 1 })
-      .width('100%')
-      .backgroundColor(0xFFFFFF)
     }
+    .width('100%')
     .height('100%')
-    .backgroundColor(0xFFFFFF)
   }
 }

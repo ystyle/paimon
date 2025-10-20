@@ -6,7 +6,10 @@ import { Game } from '../model//model'
 @Entry
 @Component
 struct Index {
-  @State hide: boolean = false
+  @State isDarkMode: boolean = false
+  @State refreshKey: number = 0
+
+  // 游戏列表数据
   private gameList: Game[] = [
     {
       name: '原神',
@@ -26,7 +29,9 @@ struct Index {
       icon: $r('app.media.star_rail'),
       nickname: '开拓者',
       tips: [
-        '你要休息了帕？'
+        '你要休息了帕？',
+        '开拓者，今天的模拟宇宙打了没有？',
+        '开拓者，今天的委托完成了吗？'
       ]
     }
   ]
@@ -34,7 +39,7 @@ struct Index {
 
   onPageShow() {
     if (!canIUse('SystemCapability.Web.Webview.Core')) {
-      console.log('没有权限')
+      console.error('WebView权限不可用')
     }
     window.getLastWindow(this.context, (err, current) => {
       current.setWindowSystemBarEnable(['status', 'navigation'])
@@ -42,46 +47,67 @@ struct Index {
     })
   }
 
+  // 游戏卡片点击事件
+  private onGameClick(game: Game) {
+    try {
+      router.pushUrl({
+        url: 'pages/Game',
+        params: {
+          type: SlideEffect.Top,
+          data: game
+        }
+      }, router.RouterMode.Single)
+    } catch (error) {
+      console.error('页面跳转失败:', error)
+    }
+  }
+
+  // 创建游戏卡片组件
+  @Builder GameCard(game: Game) {
+    Row({ space: 15 }) {
+      // 游戏图标
+      Image(game.icon)
+        .width(80)
+        .height(80)
+        .borderRadius(12)
+        .objectFit(ImageFit.Cover)
+        .shadow({ radius: 2, color: '#20000000', offsetX: 0, offsetY: 1 })
+
+      // 游戏名称
+      Text(game.name)
+        .fontSize(20)
+        .fontWeight(FontWeight.Medium)
+        .fontColor('#333333')
+        .layoutWeight(1)
+        .textAlign(TextAlign.Start)
+        .alignSelf(ItemAlign.Center)
+
+      // 箭头指示器
+      Text('>')
+        .fontSize(20)
+        .fontColor('#999999')
+        .fontWeight(FontWeight.Bold)
+    }
+    .width('100%')
+    .padding(16)
+    .backgroundColor('#FFFFFF')
+    .borderRadius(16)
+    .shadow({ radius: 4, color: '#10000000', offsetX: 0, offsetY: 1 })
+    .onClick(() => this.onGameClick(game))
+  }
+
   build() {
     Column() {
       Navigation() {
-        List({ space: 20  }) {
-          ForEach(this.gameList, (item: Game) => {
-            ListItem() {
-              Row({space: 10}) {
-                Image(item.icon)
-                  .width(100)
-                  .height(100)
-                Text(item.name)
-                  .width('calc(100% - 100vp - 10vp)')
-                  .height(100)
-                  .fontSize(16)
-                  .padding({ left: 20 })
-                  .borderRadius(10)
-                  .backgroundColor(0xFFFFFF)
-              }
-              .width('100%')
-              .layoutWeight('100%')
-            }
-            .width('100%')
-            .backgroundColor(0xC0C0C0)
-            .layoutWeight('100%')
-            .borderRadius({topRight: 10, bottomRight: 10})
-            .onClick((e) => {
-              router.pushUrl({
-                url: 'pages/Game',
-                params: { type: SlideEffect.Top, animationType: 1, data: item }
-              }, router.RouterMode.Single)
-            })
+        // 游戏列表
+        Column({ space: 24 }) {
+          ForEach(this.gameList, (item: Game, index: number) => {
+            this.GameCard(item)
           })
         }
-        .listDirection(Axis.Vertical) // 排列方向
-        .scrollBar(BarState.Off)
-        .friction(0.6)
-        .divider({ strokeWidth: 0, color: 0xFFFFFF, startMargin: 20, endMargin: 20 }) // 每行之间的分界线
-        .edgeEffect(EdgeEffect.Spring) // 边缘效果设置为Spring
-        .chainAnimation(true)
+        .padding({top: 20})
         .width('90%')
+        .height('100%')
       }
       .title('游戏列表')
       .titleMode(NavigationTitleMode.Free)
@@ -90,7 +116,6 @@ struct Index {
     }
     .width('100%')
     .height('100%')
-    .backgroundColor(0xC0C0C0)
-    // .padding({ top: 5, bottom: 15 })
+    .backgroundColor('#F5F5F5')
   }
 }
