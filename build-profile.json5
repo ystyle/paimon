@@ -3,23 +3,23 @@
     "signingConfigs": [
       {
         "name": "default",
-        "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\lxy52\\.ohos\\config\\default_paimon_xDXGPx6ytsXQMx4kYh5oz4Qa6eVqjitWwSRsMyBnelk=.cer",
+          "storePassword": "000000200D47122DBF5E1F7A879D84308304346C1F6A0290BBF19255FF4D67F68873E3F49D695F470F1C9EEBB496EDD0",
+          "certpath": "/storage/Users/currentUser/appdata/el2/base/com.huawei.devecostudio/files/ohos/config/default_paimontXi11CL6m5_f7JzJg8C0lyzvy3lDCDvCkQiUPeUvsSY.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B11784D768412BF059B2279A4B2E0EE8FE881F69DF07EEC838B213A47BF68A872F0A3AAD8AA00FA",
-          "profile": "C:\\Users\\lxy52\\.ohos\\config\\default_paimon_xDXGPx6ytsXQMx4kYh5oz4Qa6eVqjitWwSRsMyBnelk=.p7b",
+          "keyPassword": "000000200D47122DBF5E1F7A879D84308304346C1F6A0290BBF19255FF4D67F68873E3F49D695F470F1C9EEBB496EDD0",
+          "profile": "/storage/Users/currentUser/appdata/el2/base/com.huawei.devecostudio/files/ohos/config/default_paimontXi11CL6m5_f7JzJg8C0lyzvy3lDCDvCkQiUPeUvsSY.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\lxy52\\.ohos\\config\\default_paimon_xDXGPx6ytsXQMx4kYh5oz4Qa6eVqjitWwSRsMyBnelk=.p12",
-          "storePassword": "0000001BA67369396C4FDBD2CC8AA681D7B4EE79150AA513466DF5CE6EB70191586D705B5F36E76C272685"
-        }
+          "storeFile": "/storage/Users/currentUser/appdata/el2/base/com.huawei.devecostudio/files/ohos/config/default_paimontXi11CL6m5_f7JzJg8C0lyzvy3lDCDvCkQiUPeUvsSY.p12"
+        },
+        "type": "HarmonyOS"
       }
     ],
     "products": [
       {
         "name": "default",
         "signingConfig": "default",
-        "compatibleSdkVersion": "5.0.5(17)",
+        "compatibleSdkVersion": "6.0.2(22)",
         "runtimeOS": "HarmonyOS",
         "buildOption": {
           "strictMode": {
@@ -31,7 +31,7 @@
     ],
     "buildModeSet": [
       {
-        "name": "debug",
+        "name": "debug"
       },
       {
         "name": "release"

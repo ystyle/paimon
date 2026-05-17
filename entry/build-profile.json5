@@ -1,10 +1,5 @@
 {
   "apiType": "stageMode",
-  "buildOption": {
-    "arkOptions": {
-      // "apPath": "./modules.ap"  /* Profile used for profile-guided optimization (PGO), a compiler optimization technique to improve app runtime performance. */
-    }
-  },
   "buildOptionSet": [
     {
       "name": "release",
@@ -18,14 +13,14 @@
           }
         }
       }
-    },
+    }
   ],
   "targets": [
     {
       "name": "default"
     },
     {
-      "name": "ohosTest",
+      "name": "ohosTest"
     }
   ]
 }
