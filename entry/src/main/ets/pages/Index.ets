@@ -48,6 +48,7 @@ struct Index {
 
       if (deviceInfo.deviceType === '2in1') {
         current.setWindowDecorVisible(true)
+        current.recover().catch(e => console.error('recover failed', e))
       } else if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
         current.setPreferredOrientation(window.Orientation.PORTRAIT)
       }

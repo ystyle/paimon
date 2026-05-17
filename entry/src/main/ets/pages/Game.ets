@@ -61,6 +61,7 @@ struct GamePage {
     window.getLastWindow(this.context, (err, current) => {
       if (deviceInfo.deviceType === '2in1') {
         current.setWindowDecorVisible(true)
+        current.recover().catch(e => console.error('recover failed', e))
       } else if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
         current.setPreferredOrientation(window.Orientation.PORTRAIT)
       }
@@ -78,6 +79,8 @@ struct GamePage {
 
       if (deviceInfo.deviceType === '2in1') {
         current.setWindowDecorVisible(false)
+        current.maximize(window.MaximizePresentation.ENTER_IMMERSIVE_DISABLE_TITLE_AND_DOCK_HOVER)
+          .catch(e => console.error('maximize failed', e))
       } else if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
         current.setPreferredOrientation(window.Orientation.LANDSCAPE)
       }
