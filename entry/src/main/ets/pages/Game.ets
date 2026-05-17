@@ -3,7 +3,7 @@ import window from '@ohos.window';
 import deviceInfo from '@ohos.deviceInfo';
 import common from '@ohos.app.ability.common';
 import router from '@ohos.router';
-import { UserAgent } from '../common'
+import { MobileUserAgent, PCUserAgent } from '../common'
 import { Game } from '../model/model';
 
 const ANIMATION_TIME: number = 300
@@ -25,6 +25,7 @@ struct GamePage {
 
   controller: webview.WebviewController = new webview.WebviewController()
   context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext
+  private userAgent: string = deviceInfo.deviceType === '2in1' ? PCUserAgent : MobileUserAgent
 
   pageTransition() {
     // 快速滑入动画
@@ -130,7 +131,7 @@ struct GamePage {
               .zoomAccess(true)
               .pinchSmooth(true)
               .backgroundColor(0xFFFFFF)
-              .userAgent(UserAgent)
+              .userAgent(this.userAgent)
               .onPageBegin(() => {
                 console.log('页面开始加载:', this.game.url)
                 this.isLoading = false
