@@ -1,6 +1,7 @@
 import router from '@ohos.router';
 import window from '@ohos.window';
 import deviceInfo from '@ohos.deviceInfo';
+import { BusinessError } from '@ohos.base';
 import common from '@ohos.app.ability.common';
 import { Game } from '../model//model'
 
@@ -48,7 +49,7 @@ struct Index {
 
       if (deviceInfo.deviceType === '2in1') {
         current.setWindowDecorVisible(true)
-        current.recover().catch(e => console.error('recover failed', e))
+        current.recover().catch((e: BusinessError) => console.error('recover failed', e))
       } else if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
         current.setPreferredOrientation(window.Orientation.PORTRAIT)
       }
