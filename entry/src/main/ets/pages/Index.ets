@@ -47,7 +47,7 @@ struct Index {
       current.setWindowLayoutFullScreen(false)
 
       if (deviceInfo.deviceType === '2in1') {
-        current.setWindowSystemTitleBarVisible(true)
+        current.setWindowDecorVisible(true)
       } else if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
         current.setPreferredOrientation(window.Orientation.PORTRAIT)
       }

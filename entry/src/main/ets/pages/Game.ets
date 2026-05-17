@@ -59,7 +59,7 @@ struct GamePage {
 
     window.getLastWindow(this.context, (err, current) => {
       if (deviceInfo.deviceType === '2in1') {
-        current.setWindowSystemTitleBarVisible(true)
+        current.setWindowDecorVisible(true)
       } else if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
         current.setPreferredOrientation(window.Orientation.PORTRAIT)
       }
@@ -76,7 +76,7 @@ struct GamePage {
       current.setWindowLayoutFullScreen(true)
 
       if (deviceInfo.deviceType === '2in1') {
-        current.setWindowSystemTitleBarVisible(false)
+        current.setWindowDecorVisible(false)
       } else if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
         current.setPreferredOrientation(window.Orientation.LANDSCAPE)
       }
