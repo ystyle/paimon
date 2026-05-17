@@ -1,5 +1,6 @@
 import webview from '@ohos.web.webview'
 import window from '@ohos.window';
+import deviceInfo from '@ohos.deviceInfo';
 import common from '@ohos.app.ability.common';
 import router from '@ohos.router';
 import { UserAgent } from '../common'
@@ -52,10 +53,17 @@ struct GamePage {
   }
 
   aboutToDisappear() {
-    // 清理定时器
     if (this.loadTimer) {
       clearTimeout(this.loadTimer)
     }
+
+    window.getLastWindow(this.context, (err, current) => {
+      if (deviceInfo.deviceType === '2in1') {
+        current.setWindowSystemTitleBarVisible(true)
+      } else if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
+        current.setPreferredOrientation(window.Orientation.PORTRAIT)
+      }
+    })
   }
 
   aboutToAppear() {
@@ -66,6 +74,12 @@ struct GamePage {
     window.getLastWindow(this.context, (err, current) => {
       current.setWindowSystemBarEnable([])
       current.setWindowLayoutFullScreen(true)
+
+      if (deviceInfo.deviceType === '2in1') {
+        current.setWindowSystemTitleBarVisible(false)
+      } else if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
+        current.setPreferredOrientation(window.Orientation.LANDSCAPE)
+      }
     })
 
     if (this.game.nickname && this.game.tips && this.game.tips.length > 0) {

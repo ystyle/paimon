@@ -1,5 +1,6 @@
 import router from '@ohos.router';
 import window from '@ohos.window';
+import deviceInfo from '@ohos.deviceInfo';
 import common from '@ohos.app.ability.common';
 import { Game } from '../model//model'
 
@@ -44,6 +45,12 @@ struct Index {
     window.getLastWindow(this.context, (err, current) => {
       current.setWindowSystemBarEnable(['status', 'navigation'])
       current.setWindowLayoutFullScreen(false)
+
+      if (deviceInfo.deviceType === '2in1') {
+        current.setWindowSystemTitleBarVisible(true)
+      } else if (deviceInfo.deviceType === 'phone' || deviceInfo.deviceType === 'tablet') {
+        current.setPreferredOrientation(window.Orientation.PORTRAIT)
+      }
     })
   }
 
